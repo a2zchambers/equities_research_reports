@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Executive Dashboard Portfolio Matrix</title><style>
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    line-height: 1.6; color: #1e293b; margin: 0; padding: 0;
+    background-color: #f4f6f9; display: flex;
+}
+
+/* ==========================================================================
+   FIXED SIDEBAR GRID FRAMEWORK
+   ========================================================================== */
+.sidebar-nav {
+    position: fixed; top: 0; left: 0; width: 320px; height: 100vh;
+    background-color: #0f172a; color: #f8fafc; padding: 1.5rem 1.25rem;
+    z-index: 100; display: flex; flex-direction: column;
+    border-right: 1px solid #1e293b;
+}
+.search-container { margin-bottom: 1rem; position: relative; }
+.search-input {
+    width: 100%; padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+    background-color: #1e293b; color: #ffffff; border: 1px solid #334155;
+    border-radius: 6px; font-size: 0.88rem; outline: none;
+    transition: border-color 0.15s ease;
+}
+.search-input:focus { border-color: #38bdf8; }
+.search-icon {
+    position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+    color: #64748b; pointer-events: none; width: 14px; height: 14px;
+}
+.sidebar-scrollable-content { flex: 1; overflow-y: auto; padding-right: 0.25rem; margin-bottom: 100px; }
+.sidebar-scrollable-content::-webkit-scrollbar { width: 4px; }
+.sidebar-scrollable-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+.sidebar-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-top: 1.25rem; margin-bottom: 0.5rem; font-weight: bold; }
+.sidebar-subtitle { font-size: 0.85rem; color: #38bdf8; margin-bottom: 1rem; font-family: monospace; font-weight: bold; }
+.nav-item {
+    display: block; color: #94a3b8; text-decoration: none;
+    padding: 0.6rem 0.75rem; border-radius: 6px; font-size: 0.95rem; margin-bottom: 0.2rem;
+    transition: all 0.15s ease;
+}
+.nav-item:hover, .nav-item.active { background-color: #1e293b; color: #f8fafc; font-weight: 500; }
+.sidebar-toc-container { margin: 0.25rem 0 0.75rem 0; padding-left: 0.75rem; border-left: 2px solid #334155; }
+.sidebar-toc-link { display: block; color: #94a3b8; text-decoration: none; font-size: 0.85rem; padding: 0.35rem 0.5rem; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-toc-link:hover { color: #38bdf8; background-color: #1e293b; }
+.sidebar-toc-sub { padding-left: 1.25rem; font-size: 0.8rem; color: #64748b; }
+.sidebar-fixed-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.25rem; background-color: #0f172a; border-top: 1px solid #1e293b; z-index: 110; }
+.btn-print { display: flex; align-items: center; justify-content: center; width: 100%; background-color: #0284c7; color: white; border: none; padding: 0.7rem; font-size: 0.95rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
+.btn-print:hover { background-color: #0369a1; }
+.sidebar-copyright { padding-top: 0.6rem; font-size: 0.72rem; color: #64748b !important; line-height: 1.4; font-weight: 400 !important; }
+
+/* Content Frame Canvases */
+.main-content { margin-left: 320px; flex-grow: 1; padding: 3.5rem; width: calc(100% - 320px); }
+.layout-1-col { max-width: 950px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.layout-2-col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
+.layout-3-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.card { background: white; border-radius: 8px; padding: 2.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #cbd5e1; }
+.card-bullish { border-top-color: #16a34a; background-color: #f0fdf4; }
+.card-bearish { border-top-color: #dc2626; background-color: #fef2f2; }
+.card-risk { border-top-color: #ea580c; position: relative; }
+.search-highlight { background-color: #fef08a !important; color: #0f172a !important; font-weight: bold; border-radius: 2px; padding: 0 2px; }
+img { max-width: 100%; height: auto; border-radius: 6px; margin: 1rem 0; display: block; }
+.analyst-badge { display: inline-block; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 1rem; background-color: #f1f5f9; color: #475569; }
+h1, h2, h3 { color: #0f172a; margin-top: 0; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); }
+th { background-color: #0f172a; color: #ffffff; font-weight: 600; text-align: left; padding: 0.75rem 1rem; border-bottom: 2px solid #1e293b; }
+td { padding: 0.75rem 1rem; color: #334155; border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s ease; }
+tr:nth-child(even) { background-color: #f8fafc; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background-color: #f1f5f9; }
+
+/* ==========================================================================
+   NATIVE OFFLINE HTML/CSS FLOWCHART FLOW DIAGRAM STYLING
+   ========================================================================== */
+.flow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+.flow-node {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    min-width: 320px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    font-size: 0.92rem;
+    color: #1e293b;
+}
+.flow-node-start { background-color: #0f172a; border-color: #1e293b; color: #ffffff; font-weight: 600; }
+.flow-node-llm { background-color: #f0f9ff; border-color: #0284c7; color: #0369a1; font-weight: 600; }
+.flow-node-asset { background-color: #fff7ed; border-color: #ea580c; color: #c2410c; font-weight: 600; }
+.flow-node-output { background-color: #f0fdf4; border-color: #16a34a; color: #15803d; font-weight: 600; }
+
+.flow-arrow {
+    width: 2px;
+    height: 24px;
+    background-color: #94a3b8;
+    position: relative;
+}
+.flow-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: -3px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #94a3b8;
+}
+.flow-branch-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.research-disclaimer-box { margin-top: 4rem; padding-top: 2rem; border-top: 2px dashed #cbd5e1; font-size: 0.78rem; color: #64748b; text-align: justify; line-height: 1.5; }
+.disclaimer-title { font-size: 0.82rem; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 0.75rem; letter-spacing: 0.02em; }
+.disclaimer-bold { font-weight: 600; color: #334155; }
+</style></head>
+<body>
+    
+        <nav class="sidebar-nav">
+            <div class="search-container">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="dashboardSearch" class="search-input" placeholder="Search report content..." onkeyup="executeLiveSearch()">
+            </div>
+
+            <div class="sidebar-scrollable-content">
+                <div class="sidebar-title">Report Context</div>
+                <div class="sidebar-subtitle" style="word-break: break-all;">CRWD_20260724_072225</div>
+                
+                <div class="sidebar-title">Report Modules</div>
+                <a href="CRWD_0_company_info.html" class="nav-item ">0. Company Profile</a>
+                <a href="1_complete_report.html" class="nav-item ">1. Full Original Report</a>
+                
+                <a href="2_bull_bear_debate.html" class="nav-item ">2. Summary: Bull & Bear Debate</a>
+                <a href="3_risk_management.html" class="nav-item active">3. Analyst Transcripts</a>
+                <a href="4_decision_logic.html" class="nav-item ">4. System Decision Logic</a>
+                <a href="5_institutional_disclaimer.html" class="nav-item ">5. Institutional Disclaimer</a>
+            </div>
+            
+            <div class="sidebar-fixed-footer">
+                <button class="btn-print" onclick="window.print()">
+                    <svg width="14" height="14" fill="currentColor" style="margin-right:8px;" viewBox="0 0 16 16">
+                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>Print Current View
+                </button>
+                <div class="sidebar-copyright">
+                    &copy; 2026 A2Z Chambers Inc.<br>All Rights Reserved. No re-distribution is permitted.
+                </div>
+            </div>
+        </nav>
+
+        <script>
+        function executeLiveSearch() {
+            const query = document.getElementById('dashboardSearch').value.toLowerCase().trim();
+            const mainArea = document.querySelector('.main-content');
+            
+            removeSearchHighlights(mainArea);
+            if (query.length < 2) return;
+            
+            highlightTextNodes(mainArea, query);
+        }
+
+        function removeSearchHighlights(rootElement) {
+            const highlights = rootElement.querySelectorAll('.search-highlight');
+            highlights.forEach(span => {
+                const parent = span.parentNode;
+                parent.replaceChild(document.createTextNode(span.textContent), span);
+                parent.normalize();
+            });
+        }
+
+        function highlightTextNodes(element, query) {
+            if (element.classList && (element.classList.contains('sidebar-nav') || element.tagName === 'SCRIPT' || element.tagName === 'STYLE')) return;
+            let child = element.firstChild;
+            while (child) {
+                const nextChild = child.nextSibling;
+                if (child.nodeType === 3) {
+                    const text = child.nodeValue;
+                    const idx = text.toLowerCase().indexOf(query);
+                    if (idx >= 0) {
+                        const span = document.createElement('span');
+                        span.className = 'search-highlight';
+                        const matchText = text.substring(idx, idx + query.length);
+                        span.textContent = matchText;
+                        const remainingNode = child.splitText(idx);
+                        remainingNode.nodeValue = remainingNode.nodeValue.substring(query.length);
+                        element.insertBefore(span, remainingNode);
+                    }
+                } else if (child.nodeType === 1) {
+                    highlightTextNodes(child, query);
+                }
+                child = nextChild;
+            }
+        }
+        </script>
+        
+    <main class="main-content">
+        <div class="layout-3-col">
+            
+        <div class="card card-risk"><div class="analyst-badge">Aggressive Profile</div><p>The Aggressive Analyst frames CRWD as a structural dominance play, not merely volatility. The strongest evidence lies in their quantitative resilience: the company generates Free Cash Flow ($1+ billion) annually from Q1 alone that is double its annual debt obligations.</p></div>
+        <div class="card card-risk"><div class="analyst-badge">Neutral Profile</div><p>A balanced approach would neither blindly follow the Aggressive Analyst's optimism nor cling to the Conservative Analyst's caution. The Neutral Risk Analyst views high valuation as a premium for essential defensive infrastructure, but acknowledges the potential risks of overleveraging and market volatility.</p></div>
+        <div class="card card-risk"><div class="analyst-badge">Conservative Profile</div><p>The Conservative Rebuttal argues that rising rates will crush operating margins where CRWD is already negative (-$30m Op Income in Q1 '26) and unprofitable. They fear high leverage makes this a speculative bet on AI hype.</p></div>
+        
+        </div>
+    </main>
+</body>
+</html>
